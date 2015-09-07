@@ -11,6 +11,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -33,21 +34,22 @@ public class YamlTransformer {
         if (args.length < 3) {
             System.out.println("Incorrect number of arguments. ");
             System.out.println("Expected arguments: <INPUT_FILE> <OUTPUT_FILE> <" + HELP_PROPERTIES_MAP + "> <" + HELP_FLOW_STYLE + ">");
-            System.out.println("Where <" + HELP_PROPERTIES_MAP + " is a list of the form " +
+            System.out.println("Where <" + HELP_PROPERTIES_MAP + "> is a list of the form " +
                     PropertyChangesParser.START_LIST_OF_PROPERTIES +
                     "k1" + PropertyChangesParser.PROPERTY_SET_OPERATOR + "v1" + PropertyChangesParser.PROPERTY_CHANGES_SEPARATOR +
                     "k2" + PropertyChangesParser.PROPERTY_SET_OPERATOR + "v2" + PropertyChangesParser.PROPERTY_CHANGES_SEPARATOR +
                     "..." + PropertyChangesParser.END_LIST_OF_PROPERTIES);
-            System.out.println(HELP_FLOW_STYLE + " is one of: " + DumperOptions.FlowStyle.values());
+            //System.out.println("<" + HELP_FLOW_STYLE + "> is one of: " + Arrays.toString(DumperOptions.FlowStyle.values()));
+        } else {
+            String inputFileName = args[0];
+            String outputFileName = args[1].isEmpty() ? args[0] : args[1];
+            Set<PropertyChange> propertyChanges = new PropertyChangesParser(args[2]).parse();
+
+            DumperOptions dumperOptions = (args.length >=4) ? parseDumperOptions(args[3]) : new DumperOptions();
+            YamlProvider.set(new Yaml(dumperOptions));
+
+            new YamlTransformer(inputFileName, outputFileName, propertyChanges).apply();
         }
-        String inputFileName = args[0];
-        String outputFileName = args[1].isEmpty() ? args[0] : args[1];
-        Set<PropertyChange> propertyChanges = new PropertyChangesParser(args[2]).parse();
-
-        DumperOptions dumperOptions = (args.length >=4) ? parseDumperOptions(args[3]) : new DumperOptions();
-        YamlProvider.set(new Yaml(dumperOptions));
-
-        new YamlTransformer(inputFileName, outputFileName, propertyChanges).apply();
     }
 
     public static DumperOptions parseDumperOptions(String dumperOptionsString) {
