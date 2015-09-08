@@ -4,13 +4,13 @@ A Java library for accomplishing simple transformations in Yaml documents.
 
 Building it
 -----------
-Just checkout the project and generate an Uber jar with:
+Just checkout the project and generate an [uber jar](http://stackoverflow.com/questions/11947037/what-is-an-uber-jar "What is an uber jar?") with:
 
 ```
 mvn assembly:assembly -DdescriptorId=jar-with-dependencies
 ```
 
-The uber jar will be generated in: 
+The jar will be generated in: 
 
 ```
 target/yaml-transformer-xxx-jar-with-dependencies.jar
@@ -31,7 +31,7 @@ Where:
 ```<PROPERTIES_MAP>``` is a list of the form ```[k1->v1|k2->v2|...]```.
 Each ```key->value``` pair describes the new value of a property.
 
-```<OUTPUT_STYLE>``` can be either *AUTO*, *BLOCK* or *FLOW*.
+```<OUTPUT_STYLE>``` is an optional argument. It can either be *AUTO*, *BLOCK* or *FLOW*.
 Please see the [SnakeYaml documentation](https://code.google.com/p/snakeyaml/wiki/Documentation "SnakeYaml Documentation") for details.
 
 
@@ -92,6 +92,7 @@ Limitations
 -----------
 
 - Only simple map properties can be modified in the current version.
+- The input must fully respect the Yaml specification.
 - The underlying YAML parser employed by YamlTransformer does not keep existing comments.
 - The output file may have a different layout than the input file.
 
